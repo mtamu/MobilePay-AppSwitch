@@ -149,19 +149,9 @@ public class MerchantKeystore {
         
         KeyStore issuedEncryptionStore = KeyStore.getInstance("PKCS12");
         KeyStore issuedSigningStore = KeyStore.getInstance("PKCS12");
-
-        if(firstTimeIssuingCert){
-            issuedEncryptionStore.load(null, null);
-            issuedSigningStore.load(null, null);
-        }
-        else{
-            issuedEncryptionStore.load(new FileInputStream(ISSUED_ENCRYPTION_KEYSTORE_PATH), 
-                    KEYSTORE_PASSWORD);
-            issuedSigningStore.load(new FileInputStream(ISSUED_SIGNING_KEYSTORE_PATH), 
-                    KEYSTORE_PASSWORD);
-            clearStore(issuedEncryptionStore);
-            clearStore(issuedSigningStore);
-        }
+        
+        issuedEncryptionStore.load(null, null);
+        issuedSigningStore.load(null, null);
         
         issuedEncryptionStore.setKeyEntry(encryptionEntry, encryptionPrivateKey, KEYSTORE_PASSWORD, 
                 new Certificate[] {encryptionCertificate});
@@ -173,13 +163,6 @@ public class MerchantKeystore {
                 KEYSTORE_PASSWORD);
         issuedEncryptionStore.store(new FileOutputStream(ISSUED_ENCRYPTION_KEYSTORE_PATH), 
                 KEYSTORE_PASSWORD);
-    }
-
-
-    private void clearStore(KeyStore keystore) throws GeneralSecurityException {
-        while(keystore.aliases().hasMoreElements()){
-            keystore.deleteEntry(keystore.aliases().nextElement());
-        }
     }
 
     public boolean isFirstTimeIssuingCert() {
